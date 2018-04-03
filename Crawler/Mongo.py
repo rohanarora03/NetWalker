@@ -1,8 +1,5 @@
 from pymongo import MongoClient
 
-"""
-        Developed by: Prateek Jha, 15 May 2017
-"""
 
 class Database(object):
 
@@ -15,7 +12,7 @@ class Database(object):
                   "URL": curURL}
         self.linkList.insert_one(linksD)
 
-    def insertDB(self ,linksDetails, heading, curURL, metaData, linkCount):
+    def insertDB(self ,linksDetails, texts, curURL, metaData, linkCount):
         for i in linksDetails:
             if (self.linkList.find({"URL": i}).count() == 0) and i != "javascript:void(0)":
                 linkCount += 1
@@ -24,7 +21,7 @@ class Database(object):
                 self.linkList.insert_one(linksD)
 
         post = {"URL": curURL,
-                "Headings": heading,
+                "Contents": texts,
                 "TotaLinks": len(linksDetails),
                 "MetaTitle": metaData['title'],
                 "MetaUrl": metaData['url'],
