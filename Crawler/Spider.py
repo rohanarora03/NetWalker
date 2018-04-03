@@ -6,14 +6,10 @@ from lxml import etree
 import requests
 
 
-"""
-        Developed by: Prateek Jha, 15 May 2017
-"""
-
 class spider(object):
     CurLink = ""
     linkURI = []
-    headings = []
+    texts = []
     Meta = {}
 
     def __init__(self, link):
@@ -27,18 +23,14 @@ class spider(object):
         self.html = urlopen(self.CurLink).read()
         self.bs = BeautifulSoup(self.html, "lxml")
 
-        for i in self.bs.findAll("h1", text=True):
-            self.headings.append(i.text)
-        for i in self.bs.findAll("h2", text=True):
-            self.headings.append(i.text)
-        for i in self.bs.findAll("h3", text=True):
-            self.headings.append(i.text)
-        for i in self.bs.findAll("h4", text=True):
-            self.headings.append(i.text)
-        for i in self.bs.findAll("h5", text=True):
-            self.headings.append(i.text)
-        for i in self.bs.findAll("h6", text=True):
-            self.headings.append(i.text)
+        for script in self.bs(["script", "style"]):
+            script.extract()
+        text = self.bs.get_text()
+        lines = (line.strip() for line in text.splitlines())
+        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+        for chunk in chunks:
+            if chunk:
+                self.texts.append(chunk)
 
         # site = urlparse.urlsplit(self.CurLink).scheme + "://" + urlparse.urlsplit(self.CurLink).netloc + "/sitemap.aspx"
         # r = requests.get(site)
@@ -47,7 +39,7 @@ class spider(object):
             for sitemap in root:
                 children = sitemap.getchildren()
                 self.linkURI.append(children[0].text)
-        elif requests.get(urlparse.urlsplit(self.CurLink).scheme + "://" + urlparse.urlsplit(self.CurLink).netloc + "/sitemap.aspx").ok == True:
+        elif requests.get(urlparse.urlsplit(self.CurLink).scheme + "://" + urlparse.urlsplit(self.CurLink).netloc + "/sitemap.xml").ok == True:
             root = etree.fromstring(requests.get(urlparse.urlsplit(self.CurLink).scheme + "://" + urlparse.urlsplit(self.CurLink).netloc + "/sitemap.xml").content)
             for sitemap in root:
                 children = sitemap.getchildren()
@@ -64,11 +56,11 @@ class spider(object):
 
         keyw = "null"
         descr = "null"
-        if (meta.get('meta').get('keywords')):
-            keyw = meta['meta']['keywords'].split(', ')
+        if (meta.get('meta').get('Keywords')):
+            keyw = meta['meta']['Keywords'].split(', ')
 
-        if (meta.get('meta').get('description')):
-            descr = meta['meta']['description']
+        if (meta.get('meta').get('Description')):
+            descr = meta['meta']['Description']
 
         self.Meta = {
             'title': meta['page']['title'],
