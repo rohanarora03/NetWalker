@@ -1,5 +1,3 @@
-# In Development Phase
-
 # Dependencies
 - Python 2.7
 - BeautifulSoup
@@ -10,12 +8,10 @@
 - requests
 - Flask
 - lxml
+- SK-Learn
+- NLTK
 
-# How to
-- Download NLTK(Natural Language ToolKit) on your PC
-- Import ea.json in your MongoDB local server
-- Navigate to Flask/
-- Run zxc.py using CMD/Bash
-- Go to http://127.0.0.1:5000
-- Enter your query
-- Hit Return
+# Overview
+A Domain based Web Search Engine made using the fusion of various Technologies. It works by taking the query from user 
+and feeds it into the NLP module to extract chunks of words that is searched in pre-crawled Database formed using Beautiful Soup and MongoDB.
+The chunk is first iterated over the Tf-Idf Dictionary to narrow down the search and hence reducing the overall fetch-time.
