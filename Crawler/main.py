@@ -2,10 +2,6 @@ from Spider import spider
 from Mongo import Database
 from threading import Thread
 
-"""
-        Developed by: Prateek Jha, 15 May 2017
-"""
-
 linkCount = curCount = 0
 i=0
 url = "https://www.ubisoft.com/"
